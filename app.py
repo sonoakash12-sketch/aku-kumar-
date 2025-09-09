@@ -6,7 +6,7 @@ import time
 # CONFIG
 # --------------------------
 APP_TITLE = "Pravisha's Portal 💕"
-SITE_PASSWORD = "loveyou"  # change this password if you want
+SITE_PASSWORD = "loveyou"
 
 st.set_page_config(page_title=APP_TITLE, layout="centered")
 
@@ -22,9 +22,37 @@ if "authenticated" not in st.session_state:
 page_bg = """
 <style>
 [data-testid="stAppViewContainer"] {
-    background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
-    background-size: cover;
+    background: linear-gradient(-45deg, #ffdde1, #ee9ca7, #ffb3c6, #ffc8dd);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    overflow: hidden;
 }
+
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+/* floating hearts background */
+@keyframes floatHearts {
+    0% { transform: translateY(100vh) scale(0.5); opacity: 1;}
+    100% { transform: translateY(-10vh) scale(1.2); opacity: 0;}
+}
+.animated-heart {
+    position: fixed;
+    bottom: -10vh;
+    color: rgba(255,0,100,0.5);
+    font-size: 24px;
+    animation: floatHearts 12s linear infinite;
+    z-index: 0;
+}
+
+.animated-heart:nth-child(1) { left: 10%; animation-delay: 0s; }
+.animated-heart:nth-child(2) { left: 30%; animation-delay: 3s; }
+.animated-heart:nth-child(3) { left: 50%; animation-delay: 6s; }
+.animated-heart:nth-child(4) { left: 70%; animation-delay: 9s; }
+.animated-heart:nth-child(5) { left: 90%; animation-delay: 12s; }
 
 h1, h2, h3, h4, h5, h6, label, .css-16huue1, .css-10trblm {
     font-family: "Comic Sans MS", cursive, sans-serif !important;
@@ -37,21 +65,29 @@ h1, h2, h3, h4, h5, h6, label, .css-16huue1, .css-10trblm {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
+    background: linear-gradient(135deg,#ff99cc,#ff6699);
+    color:white;
 }
 
-/* Floating heart animation */
+/* Floating heart click animation */
 .heart {
     position: fixed;
     font-size: 30px;
     animation: floatUp 3s linear forwards;
-    z-index: 999;
+    z-index: 9999;
 }
-
 @keyframes floatUp {
     from { transform: translateY(0); opacity: 1; }
     to { transform: translateY(-200px); opacity: 0; }
 }
 </style>
+
+<!-- background floating hearts -->
+<div class="animated-heart">❤️</div>
+<div class="animated-heart">💖</div>
+<div class="animated-heart">💕</div>
+<div class="animated-heart">💞</div>
+<div class="animated-heart">💘</div>
 """
 st.markdown(page_bg, unsafe_allow_html=True)
 
@@ -100,7 +136,7 @@ else:
             yes_btn = st.button("Yes 💖", key=f"yes_{i}")
             if yes_btn:
                 st.success(f"Yay!! You clicked YES for: {q}")
-                # Floating hearts
+                # Floating hearts when clicked
                 for j in range(10):
                     st.markdown(
                         f"<div class='heart' style='left:{random.randint(10,90)}%; top:{random.randint(60,90)}%;'>❤️</div>",
@@ -108,7 +144,7 @@ else:
                     )
                     time.sleep(0.05)
 
-        # NO button (now moves away)
+        # NO button (runs away)
         with col2:
             st.markdown(
                 f"""
@@ -131,8 +167,8 @@ else:
                 <script>
                 const btn = document.getElementById("no_btn_{i}");
                 btn.addEventListener("mouseover", function() {{
-                    let x = Math.floor(Math.random() * 200) - 100;
-                    let y = Math.floor(Math.random() * 200) - 100;
+                    let x = Math.floor(Math.random() * 300) - 150;
+                    let y = Math.floor(Math.random() * 300) - 150;
                     btn.style.transform = `translate(${{x}}px, ${{y}}px)`;
                 }});
                 </script>
@@ -150,6 +186,7 @@ else:
                 unsafe_allow_html=True
             )
             time.sleep(0.05)
+
 
 
 
