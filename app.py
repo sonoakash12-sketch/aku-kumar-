@@ -39,6 +39,7 @@ h1, h2, h3, h4, h5, h6, label, .css-16huue1, .css-10trblm {
     cursor: pointer;
 }
 
+/* Floating heart animation */
 .heart {
     position: fixed;
     font-size: 30px;
@@ -49,6 +50,16 @@ h1, h2, h3, h4, h5, h6, label, .css-16huue1, .css-10trblm {
 @keyframes floatUp {
     from { transform: translateY(0); opacity: 1; }
     to { transform: translateY(-200px); opacity: 0; }
+}
+
+/* NO button styling */
+#no_btn {
+    background-color:#ffcccc; 
+    border:none; 
+    padding:8px 20px; 
+    border-radius:20px;
+    cursor:pointer;
+    position: relative;
 }
 </style>
 """
@@ -90,16 +101,16 @@ else:
         "Do you promise never to leave me? 💞",
     ]
 
-    for q in questions:
+    for i, q in enumerate(questions):
         st.subheader(q)
         col1, col2 = st.columns([1,1])
 
         with col1:
-            yes_btn = st.button("Yes 💖", key=f"yes_{q}")
+            yes_btn = st.button("Yes 💖", key=f"yes_{i}")
             if yes_btn:
                 st.success(f"Yay!! You clicked YES for: {q}")
                 # Floating hearts
-                for i in range(10):
+                for j in range(10):
                     st.markdown(
                         f"<div class='heart' style='left:{random.randint(10,90)}%; top:{random.randint(60,90)}%;'>❤️</div>",
                         unsafe_allow_html=True
@@ -107,26 +118,34 @@ else:
                     time.sleep(0.05)
 
         with col2:
+            # Inject custom JS No button
             st.markdown(
                 f"""
-                <button id="no_btn_{q}" style="
-                    background-color:#ffcccc; 
-                    border:none; 
-                    padding:8px 20px; 
-                    border-radius:20px;
-                    cursor:pointer;">
-                    No 💔
-                </button>
+                <div>
+                    <button id="no_btn_{i}">No 💔</button>
+                </div>
                 <script>
-                const btn = document.getElementById("no_btn_{q}");
-                btn.addEventListener("mouseover", function() {{
-                    const x = Math.floor(Math.random() * 200) - 100;
-                    const y = Math.floor(Math.random() * 200) - 100;
-                    btn.style.transform = `translate(${{x}}px, ${{y}}px)`;
+                const noBtn = document.getElementById("no_btn_{i}");
+                noBtn.addEventListener("mouseover", function() {{
+                    let x = (Math.random() * 200 - 100);
+                    let y = (Math.random() * 200 - 100);
+                    noBtn.style.transform = `translate(${{x}}px, ${{y}}px)`;
                 }});
                 </script>
                 """,
                 unsafe_allow_html=True
             )
+
+    st.write("---")
+    if st.button("Submit ❤️"):
+        st.balloons()
+        st.success("My dearest Pravisha, you are my forever love 💕\n\nYou make my world brighter, my heart fuller, and my life happier. 🌸")
+        for i in range(20):
+            st.markdown(
+                f"<div class='heart' style='left:{random.randint(5,95)}%; top:{random.randint(60,90)}%;'>💖</div>",
+                unsafe_allow_html=True
+            )
+            time.sleep(0.05)
+
 
 
