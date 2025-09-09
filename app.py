@@ -15,6 +15,8 @@ st.set_page_config(page_title=APP_TITLE, layout="centered")
 # --------------------------
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
+if "page" not in st.session_state:
+    st.session_state.page = "login"
 
 # --------------------------
 # CSS for romantic effects
@@ -49,7 +51,169 @@ page_bg = """
 }
 
 .animated-heart:nth-child(1) { left: 10%; animation-delay: 0s; }
-.animated-heart:nth-child(2) { left: 30%; animati
+.animated-heart:nth-child(2) { left: 30%; animation-delay: 3s; }
+.animated-heart:nth-child(3) { left: 50%; animation-delay: 6s; }
+.animated-heart:nth-child(4) { left: 70%; animation-delay: 9s; }
+.animated-heart:nth-child(5) { left: 90%; animation-delay: 12s; }
+
+h1, h2, h3, h4, h5, h6, label, .css-16huue1, .css-10trblm {
+    font-family: "Comic Sans MS", cursive, sans-serif !important;
+    color: #d63384 !important;
+}
+
+.stButton > button {
+    border-radius: 20px;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background: linear-gradient(135deg,#ff99cc,#ff6699);
+    color:white;
+}
+
+/* Floating heart click animation */
+.heart {
+    position: fixed;
+    font-size: 30px;
+    animation: floatUp 3s linear forwards;
+    z-index: 9999;
+}
+@keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-200px); opacity: 0; }
+}
+</style>
+
+<!-- background floating hearts -->
+<div class="animated-heart">❤️</div>
+<div class="animated-heart">💖</div>
+<div class="animated-heart">💕</div>
+<div class="animated-heart">💞</div>
+<div class="animated-heart">💘</div>
+"""
+st.markdown(page_bg, unsafe_allow_html=True)
+
+# --------------------------
+# LOGIN PAGE
+# --------------------------
+if not st.session_state.authenticated:
+    st.title(APP_TITLE)
+    st.subheader("🔒 Enter password to continue")
+
+    pw = st.text_input("Enter our secret password:", type="password")
+
+    if st.button("Enter 🚪") or (pw and pw == SITE_PASSWORD):
+        if pw == SITE_PASSWORD:
+            st.session_state.authenticated = True
+            st.session_state.page = "questions"
+            st.success("Password accepted — welcome to your portal, Pravisha! 🎉")
+            st.rerun()
+        else:
+            st.error("Oops! Wrong password, try again 💔")
+
+# --------------------------
+# QUESTIONS PAGE
+# --------------------------
+elif st.session_state.page == "questions":
+    st.title("💌 Answer these, my love 💕")
+
+    questions = [
+        "Do you love me? 💖",
+        "Will you be mine forever? 💍",
+        "Do you like my silly jokes? 😂",
+        "Can I get unlimited kisses from you? 😘",
+        "Are you the best part of my life? 🌎",
+        "Do you want cuddles right now? 🤗",
+        "Will you go on a date with me soon? 🍷",
+        "Do you like being pampered by me? 💆‍♀️",
+        "Wanna plan a surprise trip together? ✈️",
+        "Do you promise never to leave me? 💞",
+    ]
+
+    for i, q in enumerate(questions):
+        st.subheader(q)
+        col1, col2 = st.columns([1, 1])
+
+        # YES button
+        with col1:
+            yes_btn = st.button("Yes 💖", key=f"yes_{i}")
+            if yes_btn:
+                st.success(f"Yay!! You clicked YES for: {q}")
+                for j in range(10):
+                    st.markdown(
+                        f"<div class='heart' style='left:{random.randint(10,90)}%; top:{random.randint(60,90)}%;'>❤️</div>",
+                        unsafe_allow_html=True
+                    )
+                    time.sleep(0.05)
+
+        # NO button (runs away)
+        with col2:
+            st.markdown(
+                f"""
+                <div style="position: relative; height:50px;">
+                    <button id="no_btn_{i}" 
+                        style="
+                            background-color:#ffcccc; 
+                            border:none; 
+                            padding:8px 20px; 
+                            border-radius:20px;
+                            cursor:pointer;
+                            position:absolute;
+                            left:0;
+                            top:0;
+                        ">
+                        No 💔
+                    </button>
+                </div>
+
+                <script>
+                const btn = document.getElementById("no_btn_{i}");
+                btn.addEventListener("mouseover", function() {{
+                    let x = Math.floor(Math.random() * 300) - 150;
+                    let y = Math.floor(Math.random() * 300) - 150;
+                    btn.style.transform = `translate(${{x}}px, ${{y}}px)`;
+                }});
+                </script>
+                """,
+                unsafe_allow_html=True
+            )
+
+    st.write("---")
+    if st.button("Submit ❤️"):
+        st.session_state.page = "celebration"
+        st.rerun()
+
+# --------------------------
+# CELEBRATION PAGE
+# --------------------------
+elif st.session_state.page == "celebration":
+    st.title("🎉💖 Surprise for You 💖🎉")
+
+    st.markdown(
+        """
+        <h2 style='text-align:center;'>My dearest Pravisha 💕</h2>
+        <p style='font-size:20px; text-align:center;'>
+        You are the sunshine ☀️ in my mornings,<br>
+        the sparkle ✨ in my nights,<br>
+        and the heartbeat ❤️ of my every day.<br><br>
+        Here's a shower of love, kisses, and cuddles just for you! 😘😘😘<br>
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+
+    big_emojis = "😘😍🥰💋❤️💖💕💞💘💝💓✨🌸🎶🎊🎉"
+    for i in range(30):
+        st.markdown(
+            f"<div class='heart' style='left:{random.randint(5,95)}%; top:{random.randint(70,95)}%; font-size:40px;'>{random.choice(big_emojis)}</div>",
+            unsafe_allow_html=True
+        )
+        time.sleep(0.05)
+
+    if st.button("Go Back 💌"):
+        st.session_state.page = "questions"
+        st.rerun()
+
 
 
 
