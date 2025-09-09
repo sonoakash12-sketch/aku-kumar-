@@ -6,7 +6,7 @@ import time
 # CONFIG
 # --------------------------
 APP_TITLE = "Pravisha's Portal 💕"
-SITE_PASSWORD = "loveyou"  # change this password
+SITE_PASSWORD = "loveyou"  # change this password if you want
 
 st.set_page_config(page_title=APP_TITLE, layout="centered")
 
@@ -51,16 +51,6 @@ h1, h2, h3, h4, h5, h6, label, .css-16huue1, .css-10trblm {
     from { transform: translateY(0); opacity: 1; }
     to { transform: translateY(-200px); opacity: 0; }
 }
-
-/* NO button styling */
-#no_btn {
-    background-color:#ffcccc; 
-    border:none; 
-    padding:8px 20px; 
-    border-radius:20px;
-    cursor:pointer;
-    position: relative;
-}
 </style>
 """
 st.markdown(page_bg, unsafe_allow_html=True)
@@ -103,8 +93,9 @@ else:
 
     for i, q in enumerate(questions):
         st.subheader(q)
-        col1, col2 = st.columns([1,1])
+        col1, col2 = st.columns([1, 1])
 
+        # YES button
         with col1:
             yes_btn = st.button("Yes 💖", key=f"yes_{i}")
             if yes_btn:
@@ -117,19 +108,32 @@ else:
                     )
                     time.sleep(0.05)
 
+        # NO button (now moves away)
         with col2:
-            # Inject custom JS No button
             st.markdown(
                 f"""
-                <div>
-                    <button id="no_btn_{i}">No 💔</button>
+                <div style="position: relative; height:50px;">
+                    <button id="no_btn_{i}" 
+                        style="
+                            background-color:#ffcccc; 
+                            border:none; 
+                            padding:8px 20px; 
+                            border-radius:20px;
+                            cursor:pointer;
+                            position:absolute;
+                            left:0;
+                            top:0;
+                        ">
+                        No 💔
+                    </button>
                 </div>
+
                 <script>
-                const noBtn = document.getElementById("no_btn_{i}");
-                noBtn.addEventListener("mouseover", function() {{
-                    let x = (Math.random() * 200 - 100);
-                    let y = (Math.random() * 200 - 100);
-                    noBtn.style.transform = `translate(${{x}}px, ${{y}}px)`;
+                const btn = document.getElementById("no_btn_{i}");
+                btn.addEventListener("mouseover", function() {{
+                    let x = Math.floor(Math.random() * 200) - 100;
+                    let y = Math.floor(Math.random() * 200) - 100;
+                    btn.style.transform = `translate(${{x}}px, ${{y}}px)`;
                 }});
                 </script>
                 """,
@@ -146,6 +150,7 @@ else:
                 unsafe_allow_html=True
             )
             time.sleep(0.05)
+
 
 
 
