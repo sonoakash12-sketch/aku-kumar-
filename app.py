@@ -36,6 +36,7 @@ h1, h2, h3, h4, h5, h6, label, .css-16huue1, .css-10trblm {
     border: none;
     padding: 10px 20px;
     font-size: 16px;
+    cursor: pointer;
 }
 
 .heart {
@@ -62,11 +63,11 @@ if not st.session_state.authenticated:
 
     pw = st.text_input("Enter our secret password:", type="password")
 
-    if st.button("Enter 🚪"):
+    if st.button("Enter 🚪") or (pw and pw == SITE_PASSWORD):
         if pw == SITE_PASSWORD:
             st.session_state.authenticated = True
             st.success("Password accepted — welcome to your portal, Pravisha! 🎉")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Oops! Wrong password, try again 💔")
 
@@ -90,6 +91,7 @@ else:
     ]
 
     for q in questions:
+        st.subheader(q)
         col1, col2 = st.columns([1,1])
 
         with col1:
@@ -126,4 +128,5 @@ else:
                 """,
                 unsafe_allow_html=True
             )
+
 
